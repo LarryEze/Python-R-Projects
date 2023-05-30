@@ -98,19 +98,24 @@ stanton_hr = stanton.loc[stanton['events'] == 'home_run']
 
 # Create a figure with two scatter plots of launch speed vs. launch angle, one for each player's home runs
 fig1, axs1 = plt.subplots(ncols=2, sharex=True, sharey=True)
-sns.regplot(x='launch_angle', y='launch_speed', fit_reg=False, color='tab:blue', data=judge_hr, ax=axs1[0]).set_title('Aaron Judge\nHome Runs, 2015-2017')
-sns.regplot(x='launch_angle', y='launch_speed', fit_reg=False, color='tab:blue', data=stanton_hr, ax=axs1[1]).set_title('Giancarlo Stanton\nHome Runs, 2015-2017')
+sns.regplot(x='launch_angle', y='launch_speed', fit_reg=False, color='tab:blue',
+            data=judge_hr, ax=axs1[0]).set_title('Aaron Judge\nHome Runs, 2015-2017')
+sns.regplot(x='launch_angle', y='launch_speed', fit_reg=False, color='tab:blue',
+            data=stanton_hr, ax=axs1[1]).set_title('Giancarlo Stanton\nHome Runs, 2015-2017')
 
 # Create a figure with two KDE plots of launch speed vs. launch angle, one for each player's home runs
 fig2, axs2 = plt.subplots(ncols=2, sharex=True, sharey=True)
-sns.kdeplot(judge_hr.launch_angle, judge_hr.launch_speed, cmap="Blues", shade=True, shade_lowest=False, ax=axs2[0]).set_title('Aaron Judge\nHome Runs, 2015-2017')
-sns.kdeplot(stanton_hr.launch_angle, stanton_hr.launch_speed, cmap="Blues", shade=True, shade_lowest=False, ax=axs2[1]).set_title('Giancarlo Stanton\nHome Runs, 2015-2017')
+sns.kdeplot(x=judge_hr.launch_angle, y=judge_hr.launch_speed, cmap="Blues", shade=True,
+            shade_lowest=False, ax=axs2[0]).set_title('Aaron Judge\nHome Runs, 2015-2017')
+sns.kdeplot(x=stanton_hr.launch_angle, y=stanton_hr.launch_speed, cmap="Blues", shade=True,
+            shade_lowest=False, ax=axs2[1]).set_title('Giancarlo Stanton\nHome Runs, 2015-2017')
 
 
 # In[9]:
 
 
-get_ipython().run_cell_magic('nose', '', '    \nimport pandas as pd\n\ndef test_judge_hr_correct():\n    correct_judge_hr = judge.loc[judge[\'events\'] == \'home_run\']\n    assert correct_judge_hr.equals(judge_hr), "The variable judge_hr should contain all pitches in judge that resulted in a home run."\n\ndef test_stanton_hr_correct():\n    correct_stanton_hr = stanton.loc[stanton[\'events\'] == \'home_run\']\n    assert correct_stanton_hr.equals(stanton_hr), "The variable stanton_hr should contain all pitches in stanton that resulted in a home run."\n    \n# No standard testing procedure exists for plots at the moment')
+get_ipython().run_cell_magic('nose', '',
+                             '    \nimport pandas as pd\n\ndef test_judge_hr_correct():\n    correct_judge_hr = judge.loc[judge[\'events\'] == \'home_run\']\n    assert correct_judge_hr.equals(judge_hr), "The variable judge_hr should contain all pitches in judge that resulted in a home run."\n\ndef test_stanton_hr_correct():\n    correct_stanton_hr = stanton.loc[stanton[\'events\'] == \'home_run\']\n    assert correct_stanton_hr.equals(stanton_hr), "The variable stanton_hr should contain all pitches in stanton that resulted in a home run."\n    \n# No standard testing procedure exists for plots at the moment')
 
 
 # ## 5. Home runs by pitch velocity
@@ -124,13 +129,15 @@ get_ipython().run_cell_magic('nose', '', '    \nimport pandas as pd\n\ndef test_
 judge_stanton_hr = pd.concat([judge_hr, stanton_hr])
 
 # Create a boxplot that describes the pitch velocity of each player's home runs
-sns.boxplot('player_name', y='release_speed', color='tab:blue', data=judge_stanton_hr).set_title('Home Runs, 2015-2017')
+sns.boxplot(x='player_name', y='release_speed', color='tab:blue',
+            data=judge_stanton_hr).set_title('Home Runs, 2015-2017')
 
 
 # In[11]:
 
 
-get_ipython().run_cell_magic('nose', '', '\ndef test_judge_stanton_hr_correct():\n    correct_judge_stanton_hr = pd.concat([judge_hr, stanton_hr])\n    also_correct_judge_stanton_hr = pd.concat([stanton_hr, judge_hr])\n    assert correct_judge_stanton_hr.equals(judge_stanton_hr) or \\\n        also_correct_judge_stanton_hr.equals(judge_stanton_hr), \\\n        "The variable judge_stanton_hr should be the concatenation of judge_hr and stanton_hr."        \n\n# No standard testing procedure exists for plots at the moment')
+get_ipython().run_cell_magic('nose', '',
+                             '\ndef test_judge_stanton_hr_correct():\n    correct_judge_stanton_hr = pd.concat([judge_hr, stanton_hr])\n    also_correct_judge_stanton_hr = pd.concat([stanton_hr, judge_hr])\n    assert correct_judge_stanton_hr.equals(judge_stanton_hr) or \\\n        also_correct_judge_stanton_hr.equals(judge_stanton_hr), \\\n        "The variable judge_stanton_hr should be the concatenation of judge_hr and stanton_hr."        \n\n# No standard testing procedure exists for plots at the moment')
 
 
 # ## 6. Home runs by pitch location (I)
@@ -201,11 +208,11 @@ get_ipython().run_cell_magic('nose', '', '\ndef test_assign_y_coord():\n    dumm
 judge_strike_hr = judge_hr.copy().loc[judge_hr.zone <= 9]
 
 # Assign Cartesian coordinates to pitches in the strike zone for Judge home runs
-judge_strike_hr['zone_x'] = judge_strike_hr.apply(assign_x_coord, axis = 1)
-judge_strike_hr['zone_y'] = judge_strike_hr.apply(assign_y_coord, axis = 1)
+judge_strike_hr['zone_x'] = judge_strike_hr.apply(assign_x_coord, axis=1)
+judge_strike_hr['zone_y'] = judge_strike_hr.apply(assign_y_coord, axis=1)
 
 # Plot Judge's home run zone as a 2D histogram with a colorbar
-plt.hist2d(x = 'zone_x', y = 'zone_y', bins = 3, cmap='Blues', data = judge_strike_hr)
+plt.hist2d(x='zone_x', y='zone_y', bins=3, cmap='Blues', data=judge_strike_hr)
 plt.title('Aaron Judge Home Runs on\n Pitches in the Strike Zone, 2015-2017')
 plt.gca().get_xaxis().set_visible(False)
 plt.gca().get_yaxis().set_visible(False)
@@ -216,7 +223,8 @@ cb.set_label('Counts in Bin')
 # In[17]:
 
 
-get_ipython().run_cell_magic('nose', '', '\ndef test_judge_strike_hr_correct():\n    correct_judge_strike_hr = judge_hr.copy().loc[judge_hr.zone <= 9]\n    correct_judge_strike_hr[\'zone_x\'] = correct_judge_strike_hr.apply(assign_x_coord, axis=1)\n    correct_judge_strike_hr[\'zone_y\'] = correct_judge_strike_hr.apply(assign_y_coord, axis=1)\n    assert correct_judge_strike_hr.equals(judge_strike_hr), "The zone_x and zone_y columns of judge_strike_hr should contain each zone\'s Cartesian coordinates."\n\n# No standard testing procedure exists for plots at the moment')
+get_ipython().run_cell_magic('nose', '',
+                             '\ndef test_judge_strike_hr_correct():\n    correct_judge_strike_hr = judge_hr.copy().loc[judge_hr.zone <= 9]\n    correct_judge_strike_hr[\'zone_x\'] = correct_judge_strike_hr.apply(assign_x_coord, axis=1)\n    correct_judge_strike_hr[\'zone_y\'] = correct_judge_strike_hr.apply(assign_y_coord, axis=1)\n    assert correct_judge_strike_hr.equals(judge_strike_hr), "The zone_x and zone_y columns of judge_strike_hr should contain each zone\'s Cartesian coordinates."\n\n# No standard testing procedure exists for plots at the moment')
 
 
 # ## 9. Giancarlo Stanton's home run zone
@@ -229,11 +237,12 @@ get_ipython().run_cell_magic('nose', '', '\ndef test_judge_strike_hr_correct():\
 stanton_strike_hr = stanton_hr.copy().loc[stanton_hr.zone <= 9]
 
 # Assign Cartesian coordinates to pitches in the strike zone for Stanton home runs
-stanton_strike_hr['zone_x'] = stanton_strike_hr.apply(assign_x_coord, axis = 1)
-stanton_strike_hr['zone_y'] = stanton_strike_hr.apply(assign_y_coord, axis = 1)
+stanton_strike_hr['zone_x'] = stanton_strike_hr.apply(assign_x_coord, axis=1)
+stanton_strike_hr['zone_y'] = stanton_strike_hr.apply(assign_y_coord, axis=1)
 
 # Plot Stanton's home run zone as a 2D histogram with a colorbar
-plt.hist2d(x = 'zone_x', y = 'zone_y', bins = 3, cmap='Blues', data = stanton_strike_hr)
+plt.hist2d(x='zone_x', y='zone_y', bins=3,
+           cmap='Blues', data=stanton_strike_hr)
 plt.title('Giancarlo Stanton Home Runs on\n Pitches in the Strike Zone, 2015-2017')
 plt.gca().get_xaxis().set_visible(False)
 plt.gca().get_yaxis().set_visible(False)
@@ -244,7 +253,8 @@ cb.set_label('Counts in Bin')
 # In[19]:
 
 
-get_ipython().run_cell_magic('nose', '', '\ndef test_stanton_strike_hr_correct():\n    correct_stanton_strike_hr = stanton_hr.copy().loc[stanton_hr.zone <= 9]\n    correct_stanton_strike_hr[\'zone_x\'] = correct_stanton_strike_hr.apply(assign_x_coord, axis=1)\n    correct_stanton_strike_hr[\'zone_y\'] = correct_stanton_strike_hr.apply(assign_y_coord, axis=1)\n    assert correct_stanton_strike_hr.equals(stanton_strike_hr), "The zone_x and zone_y columns of stanton_strike_hr should contain each zone\'s Cartesian coordinates."\n\n# No standard testing procedure exists for plots at the moment')
+get_ipython().run_cell_magic('nose', '',
+                             '\ndef test_stanton_strike_hr_correct():\n    correct_stanton_strike_hr = stanton_hr.copy().loc[stanton_hr.zone <= 9]\n    correct_stanton_strike_hr[\'zone_x\'] = correct_stanton_strike_hr.apply(assign_x_coord, axis=1)\n    correct_stanton_strike_hr[\'zone_y\'] = correct_stanton_strike_hr.apply(assign_y_coord, axis=1)\n    assert correct_stanton_strike_hr.equals(stanton_strike_hr), "The zone_x and zone_y columns of stanton_strike_hr should contain each zone\'s Cartesian coordinates."\n\n# No standard testing procedure exists for plots at the moment')
 
 
 # ## 10. Should opposing pitchers be scared?
@@ -268,5 +278,5 @@ should_pitchers_be_scared = True
 # In[21]:
 
 
-get_ipython().run_cell_magic('nose', '', '\ndef test_scared():\n    assert should_pitchers_be_scared == True, "Pitchers should be scared of Aaron Judge and Giancarlo Stanton! They are scary!"')
-
+get_ipython().run_cell_magic('nose', '',
+                             '\ndef test_scared():\n    assert should_pitchers_be_scared == True, "Pitchers should be scared of Aaron Judge and Giancarlo Stanton! They are scary!"')
