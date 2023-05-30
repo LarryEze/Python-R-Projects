@@ -16,13 +16,17 @@
 
 
 # Import packages and set numpy random seed
-import numpy as np
-np.random.seed(5) 
-import tensorflow as tf
-tf.set_random_seed(2)
-from datasets import sign_language
+from keras.models import Sequential
+from keras.layers import Flatten, Dense
+from keras.layers import Conv2D, MaxPooling2D
+from keras.utils import np_utils
 import matplotlib.pyplot as plt
-get_ipython().run_line_magic('matplotlib', 'inline')
+from datasets import sign_language
+import tensorflow as tf
+import numpy as np
+np.random.seed(5)
+tf.random.set_seed(2)
+# get_ipython().run_line_magic('matplotlib', 'inline')
 
 # Load pre-shuffled training and test datasets
 (x_train, y_train), (x_test, y_test) = sign_language.load_data()
@@ -31,7 +35,8 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 # In[3]:
 
 
-get_ipython().run_cell_magic('nose', '', "# This needs to be included at the beginning of every @tests cell.\n\n# One or more tests of the students code.\n# The @solution should pass the tests.\n# The purpose of the tests is to try to catch common errors and to \n# give the student a hint on how to resolve these errors.\n\ndef test_task_1_0():\n    assert 'np' in globals() and np.random.get_state()[1][0] == 5 and \\\n    x_train.shape==(1600, 50, 50, 3) and y_train.shape==(1600,), \\\n    'Please run the code cell without making any changes.'")
+get_ipython().run_cell_magic('nose', '',
+                             "# This needs to be included at the beginning of every @tests cell.\n\n# One or more tests of the students code.\n# The @solution should pass the tests.\n# The purpose of the tests is to try to catch common errors and to \n# give the student a hint on how to resolve these errors.\n\ndef test_task_1_0():\n    assert 'np' in globals() and np.random.get_state()[1][0] == 5 and \\\n    x_train.shape==(1600, 50, 50, 3) and y_train.shape==(1600,), \\\n    'Please run the code cell without making any changes.'")
 
 
 # ## 2. Visualize the training data
@@ -44,7 +49,7 @@ get_ipython().run_cell_magic('nose', '', "# This needs to be included at the beg
 labels = ['A', 'B', 'C']
 
 # Print the first several training images, along with the labels
-fig = plt.figure(figsize=(20,5))
+fig = plt.figure(figsize=(20, 5))
 for i in range(36):
     ax = fig.add_subplot(3, 12, i + 1, xticks=[], yticks=[])
     ax.imshow(np.squeeze(x_train[i]))
@@ -55,7 +60,8 @@ plt.show()
 # In[5]:
 
 
-get_ipython().run_cell_magic('nose', '', '# This needs to be included at the beginning of every @tests cell.\n\n# One or more tests of the students code. \n# The @solution should pass the tests.\n# The purpose of the tests is to try to catch common errors and to \n# give the student a hint on how to resolve these errors.\n\ndef test_task_2_0():\n    assert labels == [\'A\', \'B\', \'C\'], \\\n    \'Did you forget to set labels to a Python list with items "A", "B", and "C"?\'')
+get_ipython().run_cell_magic('nose', '',
+                             '# This needs to be included at the beginning of every @tests cell.\n\n# One or more tests of the students code. \n# The @solution should pass the tests.\n# The purpose of the tests is to try to catch common errors and to \n# give the student a hint on how to resolve these errors.\n\ndef test_task_2_0():\n    assert labels == [\'A\', \'B\', \'C\'], \\\n    \'Did you forget to set labels to a Python list with items "A", "B", and "C"?\'')
 
 
 # ## 3. Examine the dataset
@@ -68,18 +74,18 @@ get_ipython().run_cell_magic('nose', '', '# This needs to be included at the beg
 
 
 # Number of A's in the training dataset
-num_A_train = sum(y_train==0)
+num_A_train = sum(y_train == 0)
 # Number of B's in the training dataset
-num_B_train = sum(y_train==1)
+num_B_train = sum(y_train == 1)
 # Number of C's in the training dataset
-num_C_train = sum(y_train==2)
+num_C_train = sum(y_train == 2)
 
 # Number of A's in the test dataset
-num_A_test = sum(y_test==0)
+num_A_test = sum(y_test == 0)
 # Number of B's in the test dataset
-num_B_test = sum(y_test==1)
+num_B_test = sum(y_test == 1)
 # Number of C's in the test dataset
-num_C_test = sum(y_test==2)
+num_C_test = sum(y_test == 2)
 
 # Print statistics about the dataset
 print("Training set:")
@@ -109,8 +115,6 @@ get_ipython().run_cell_magic('nose', '', "# This needs to be included at the beg
 # In[8]:
 
 
-from keras.utils import np_utils
-
 # One-hot encode the training labels
 y_train_OH = np_utils.to_categorical(y_train, 3)
 
@@ -131,25 +135,21 @@ get_ipython().run_cell_magic('nose', '', "# This needs to be included at the beg
 # In[10]:
 
 
-from keras.layers import Conv2D, MaxPooling2D
-from keras.layers import Flatten, Dense
-from keras.models import Sequential
-
 model = Sequential()
 # First convolutional layer accepts image input
-model.add(Conv2D(filters=5, kernel_size=5, padding='same', activation='relu', 
-                        input_shape=(50, 50, 3)))
+model.add(Conv2D(filters=5, kernel_size=5, padding='same', activation='relu',
+                 input_shape=(50, 50, 3)))
 
 # Add a max pooling layer
 model.add(MaxPooling2D(pool_size=(4, 4)))
-          
+
 # Add a convolutional layer
-model.add(Conv2D(filters=15, kernel_size=5, padding='same', activation='relu', 
-                        input_shape=(50, 50, 3)))
-          
+model.add(Conv2D(filters=15, kernel_size=5, padding='same', activation='relu',
+                 input_shape=(50, 50, 3)))
+
 # Add another max pooling layer
 model.add(MaxPooling2D(pool_size=(4, 4)))
-          
+
 # Flatten and feed to output layer
 model.add(Flatten())
 model.add(Dense(3, activation='softmax'))
@@ -161,7 +161,8 @@ model.summary()
 # In[11]:
 
 
-get_ipython().run_cell_magic('nose', '', '# This needs to be included at the beginning of every @tests cell.\n\n# One or more tests of the students code. \n# The @solution should pass the tests.\n# The purpose of the tests is to try to catch common errors and to \n# give the student a hint on how to resolve these errors.\n\ndef test_task_5_0():\n    from keras.activations import relu\n    assert model.layers[0].filters == 5 and \\\n    model.layers[0].kernel_size == (5, 5) and \\\n    model.layers[0].padding == \'same\' and \\\n    model.layers[2].activation == relu, \\\n    \'Did you leave the first convolutional layer as provided in the code?\'\n\ndef test_task_5_1():\n    assert model.layers[1].pool_size == (4, 4), \\\n    \'Does the first pooling layer pool over windows of size 4x4?\'\n    \ndef test_task_5_2():\n    assert model.layers[2].filters == 15, \\\n    \'Does the second convolutional layer have 15 filters?\'\n    \ndef test_task_5_3():\n    assert model.layers[2].kernel_size == (5, 5), \\\n    \'Does the second convolutional layer have kernel size 5?\'\n    \ndef test_task_5_4():\n    assert model.layers[2].padding == \'same\', \\\n    \'Does the second convolutional layer have "same" padding?\'\n    \ndef test_task_5_5():\n    from keras.activations import relu\n    assert model.layers[2].activation == relu, \\\n    \'Does the second convolutional layer have a "relu" activation function?\'\n    \ndef test_task_5_6():\n    assert model.layers[3].pool_size == (4, 4), \\\n    \'Does the second pooling layer pool over windows of size 4x4?\'')
+get_ipython().run_cell_magic('nose', '',
+                             '# This needs to be included at the beginning of every @tests cell.\n\n# One or more tests of the students code. \n# The @solution should pass the tests.\n# The purpose of the tests is to try to catch common errors and to \n# give the student a hint on how to resolve these errors.\n\ndef test_task_5_0():\n    from keras.activations import relu\n    assert model.layers[0].filters == 5 and \\\n    model.layers[0].kernel_size == (5, 5) and \\\n    model.layers[0].padding == \'same\' and \\\n    model.layers[2].activation == relu, \\\n    \'Did you leave the first convolutional layer as provided in the code?\'\n\ndef test_task_5_1():\n    assert model.layers[1].pool_size == (4, 4), \\\n    \'Does the first pooling layer pool over windows of size 4x4?\'\n    \ndef test_task_5_2():\n    assert model.layers[2].filters == 15, \\\n    \'Does the second convolutional layer have 15 filters?\'\n    \ndef test_task_5_3():\n    assert model.layers[2].kernel_size == (5, 5), \\\n    \'Does the second convolutional layer have kernel size 5?\'\n    \ndef test_task_5_4():\n    assert model.layers[2].padding == \'same\', \\\n    \'Does the second convolutional layer have "same" padding?\'\n    \ndef test_task_5_5():\n    from keras.activations import relu\n    assert model.layers[2].activation == relu, \\\n    \'Does the second convolutional layer have a "relu" activation function?\'\n    \ndef test_task_5_6():\n    assert model.layers[3].pool_size == (4, 4), \\\n    \'Does the second pooling layer pool over windows of size 4x4?\'')
 
 
 # ## 6. Compile the model
@@ -171,15 +172,16 @@ get_ipython().run_cell_magic('nose', '', '# This needs to be included at the beg
 
 
 # Compile the model
-model.compile(optimizer='rmsprop', 
-              loss='categorical_crossentropy', 
+model.compile(optimizer='rmsprop',
+              loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 
 # In[13]:
 
 
-get_ipython().run_cell_magic('nose', '', '# This needs to be included at the beginning of every @tests cell.\n\n# One or more tests of the students code. \n# The @solution should pass the tests.\n# The purpose of the tests is to try to catch common errors and to \n# give the student a hint on how to resolve these errors.\n\ndef test_task_6_0():\n    from keras.optimizers import RMSprop\n    assert isinstance(model.optimizer, RMSprop), \\\n    \'Did you set the optimizer to `"rmsprop"`?\'\n\ndef test_task_6_1():\n    assert model.loss == \'categorical_crossentropy\', \\\n    \'Did you set `"categorical_crossentropy" as the loss function?`\'\n\ndef test_task_6_2():\n    assert model.metrics == [\'accuracy\'], \\\n    \'Did you set accuracy as the only metric that is evaluated by the model during training?\'')
+get_ipython().run_cell_magic('nose', '',
+                             '# This needs to be included at the beginning of every @tests cell.\n\n# One or more tests of the students code. \n# The @solution should pass the tests.\n# The purpose of the tests is to try to catch common errors and to \n# give the student a hint on how to resolve these errors.\n\ndef test_task_6_0():\n    from keras.optimizers import RMSprop\n    assert isinstance(model.optimizer, RMSprop), \\\n    \'Did you set the optimizer to `"rmsprop"`?\'\n\ndef test_task_6_1():\n    assert model.loss == \'categorical_crossentropy\', \\\n    \'Did you set `"categorical_crossentropy" as the loss function?`\'\n\ndef test_task_6_2():\n    assert model.metrics == [\'accuracy\'], \\\n    \'Did you set accuracy as the only metric that is evaluated by the model during training?\'')
 
 
 # ## 7. Train the model
@@ -189,13 +191,15 @@ get_ipython().run_cell_magic('nose', '', '# This needs to be included at the beg
 
 
 # Train the model
-hist = model.fit(x_train, y_train_OH, validation_split=0.2, batch_size=32, epochs=2)
+hist = model.fit(x_train, y_train_OH, validation_split=0.2,
+                 batch_size=32, epochs=2)
 
 
 # In[15]:
 
 
-get_ipython().run_cell_magic('nose', '', "# This needs to be included at the beginning of every @tests cell.\n\n# One or more tests of the students code. \n# The @solution should pass the tests.\n# The purpose of the tests is to try to catch common errors and to \n# give the student a hint on how to resolve these errors.\n\ndef test_task_7_0():\n    assert hist.epoch == [0,1], \\\n    'Did you train the model for 2 epochs?'\n\ndef test_task_7_1():\n    assert hist.history['acc'][1] > 0.8, \\\n    'Did you use x_train and y_train_OH to train the model with a batch size of 32, and setting aside 20% of the data for validation?'")
+get_ipython().run_cell_magic('nose', '',
+                             "# This needs to be included at the beginning of every @tests cell.\n\n# One or more tests of the students code. \n# The @solution should pass the tests.\n# The purpose of the tests is to try to catch common errors and to \n# give the student a hint on how to resolve these errors.\n\ndef test_task_7_0():\n    assert hist.epoch == [0,1], \\\n    'Did you train the model for 2 epochs?'\n\ndef test_task_7_1():\n    assert hist.history['acc'][1] > 0.8, \\\n    'Did you use x_train and y_train_OH to train the model with a batch size of 32, and setting aside 20% of the data for validation?'")
 
 
 # ## 8. Test the model
@@ -206,7 +210,7 @@ get_ipython().run_cell_magic('nose', '', "# This needs to be included at the beg
 
 
 # Obtain accuracy on test set
-score = model.evaluate(x=x_test, 
+score = model.evaluate(x=x_test,
                        y=y_test_OH,
                        verbose=0)
 print('Test accuracy:', score[1])
@@ -236,15 +240,17 @@ y_preds = np.argmax(y_probs, axis=1)
 bad_test_idxs = np.where(y_preds != y_test)[0]
 
 # Print mislabeled examples
-fig = plt.figure(figsize=(25,4))
+fig = plt.figure(figsize=(25, 4))
 for i, idx in enumerate(bad_test_idxs):
-    ax = fig.add_subplot(2, np.ceil(len(bad_test_idxs)/2), i + 1, xticks=[], yticks=[])
+    ax = fig.add_subplot(2, np.ceil(len(bad_test_idxs)/2),
+                         i + 1, xticks=[], yticks=[])
     ax.imshow(np.squeeze(x_test[idx]))
-    ax.set_title("{} (pred: {})".format(labels[y_test[idx]], labels[y_preds[idx]]))
+    ax.set_title("{} (pred: {})".format(
+        labels[y_test[idx]], labels[y_preds[idx]]))
 
 
 # In[19]:
 
 
-get_ipython().run_cell_magic('nose', '', "# This needs to be included at the beginning of every @tests cell.\n\n# One or more tests of the students code. \n# The @solution should pass the tests.\n# The purpose of the tests is to try to catch common errors and to \n# give the student a hint on how to resolve these errors.\n\ndef test_task_9_0():\n    assert np.all(y_probs == model.predict(x_test)), \\\n    'Did you calculate the predicted probabilities for the test dataset?'\n    \ndef test_task_9_1():\n    assert np.all(y_preds == np.argmax(y_probs, axis=1)), \\\n    'Did you calculate the predicted labels for the test dataset?'\n    \ndef test_task_9_2():\n    assert np.all(bad_test_idxs == np.where(y_preds!=y_test)[0]), \\\n    'Did you find the indices corresponding to images in the test set that were incorrectly classified by the model?'")
-
+get_ipython().run_cell_magic('nose', '',
+                             "# This needs to be included at the beginning of every @tests cell.\n\n# One or more tests of the students code. \n# The @solution should pass the tests.\n# The purpose of the tests is to try to catch common errors and to \n# give the student a hint on how to resolve these errors.\n\ndef test_task_9_0():\n    assert np.all(y_probs == model.predict(x_test)), \\\n    'Did you calculate the predicted probabilities for the test dataset?'\n    \ndef test_task_9_1():\n    assert np.all(y_preds == np.argmax(y_probs, axis=1)), \\\n    'Did you calculate the predicted labels for the test dataset?'\n    \ndef test_task_9_2():\n    assert np.all(bad_test_idxs == np.where(y_preds!=y_test)[0]), \\\n    'Did you find the indices corresponding to images in the test set that were incorrectly classified by the model?'")
