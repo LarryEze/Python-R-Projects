@@ -1,7 +1,12 @@
 {
 	"cSpell.words": [
+		"acousticness",
+		"barplot",
 		"colorbar",
+		"danceability",
 		"datacamp",
+		"dataframes",
+		"echonest",
 		"Eddard",
 		"evol",
 		"fnames",
@@ -12,8 +17,10 @@
 		"LIII",
 		"Malala",
 		"Originof",
+		"overfitting",
 		"pagerank",
 		"runkeeper",
+		"sklearn",
 		"speci",
 		"Statcast",
 		"statsmodels",
