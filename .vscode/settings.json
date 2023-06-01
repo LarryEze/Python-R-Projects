@@ -27,6 +27,8 @@
 		"Originof",
 		"overfitting",
 		"pagerank",
+		"pdays",
+		"poutcome",
 		"runkeeper",
 		"Sephora",
 		"sklearn",
